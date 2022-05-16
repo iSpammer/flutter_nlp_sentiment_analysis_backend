@@ -240,7 +240,7 @@ workflows:
       - test-backend:
           requires: [build-backend]
       - deploy-infrastructure:
-          requires: [test-backend, scan-backend]
+          requires: [build-backend, test-backend]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - deploy-model:
