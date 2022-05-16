@@ -28,18 +28,18 @@ jobs:
           pkg-manager: pip
 #          app-dir: ~/project/package-directory/
 
-  test-backend:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - checkout
-      - python/install-packages:
-          pkg-manager: pip
-      - run:
-          name: test back end for errors
-          command: |
-            pip install
-            flask run
+#  test-backend:
+#    docker:
+#      - image: circleci/node:13.8.0
+#    steps:
+#      - checkout
+#      - python/install-packages:
+#          pkg-manager: pip
+#      - run:
+#          name: test back end for errors
+#          command: |
+#            pip install
+#            flask run
   deploy-infrastructure:
     docker:
       - image: amazon/aws-cli
@@ -226,10 +226,10 @@ workflows:
   default:
     jobs:
       - build-backend
-      - test-backend:
-          requires: [build-backend]
+#      - test-backend:
+#          requires: [build-backend]
       - deploy-infrastructure:
-          requires: [build-backend, test-backend]
+          requires: [build-backend]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - deploy-model:
