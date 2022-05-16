@@ -35,8 +35,9 @@ jobs:
       - checkout
       - run:
           name: test back end for errors
-          command: pytest
-
+          command: |
+            pip install
+            flask run
   deploy-infrastructure:
     docker:
       - image: amazon/aws-cli
