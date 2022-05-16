@@ -33,6 +33,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - python/install-packages:
+          pkg-manager: pip
       - run:
           name: test back end for errors
           command: |
