@@ -15,7 +15,7 @@ def hello():
     return "hey"
 @app.route('/predict', methods=['POST'])
 def predict():
-    model = load_model('LSTMGLOVE.hdf5', compile=False)
+    model = load_model('model/LSTMGLOVE.hdf5', compile=False)
     MAX_NB_WORDS = 10000
     MAX_SEQUENCE_LENGTH = 100
 
@@ -51,4 +51,4 @@ def predict():
     else:
         return ('No model here to use')
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=80)
