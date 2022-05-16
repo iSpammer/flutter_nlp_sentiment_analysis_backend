@@ -6,6 +6,8 @@ orbs:
   slack: circleci/slack@4.2.1
 commands:
   destroy-environment:
+    docker:
+      - image: amazon/aws-cli
     description: remove backend and model specified stacks ids .
 
     steps:
