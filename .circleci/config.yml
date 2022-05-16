@@ -6,15 +6,16 @@ orbs:
   slack: circleci/slack@4.2.1
 commands:
   destroy-environment:
-    docker:
-      - image: amazon/aws-cli
+    
     description: remove backend and model specified stacks ids .
-
     steps:
       - run:
           name: remove environments
           when: on_fail
           command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
             aws s3 rm --recursive s3://nlp-${CIRCLE_WORKFLOW_ID:0:7}
             aws cloudformation delete-stack \
               --stack-name "nlp-backend-${CIRCLE_WORKFLOW_ID:0:7}"
