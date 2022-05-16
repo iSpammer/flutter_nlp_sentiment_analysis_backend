@@ -33,7 +33,7 @@ Resources:
       SecurityGroups:
         - Ref: InstanceSecurityGroup
       KeyName: lab
-      ImageId: ami-04505e74c0741db8d
+      ImageId: ami-015c25ad8763b2f11
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
