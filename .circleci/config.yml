@@ -6,18 +6,18 @@ orbs:
   slack: circleci/slack@4.2.1
 commands:
   destroy-environment:
-    description: remove backend and frontend specified stacks ids .
+    description: remove backend and model specified stacks ids .
 
     steps:
       - run:
           name: remove environments
           when: on_fail
           command: |
-            aws s3 rm --recursive s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}
+            aws s3 rm --recursive s3://nlp-${CIRCLE_WORKFLOW_ID:0:7}
             aws cloudformation delete-stack \
-              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+              --stack-name "nlp-backend-${CIRCLE_WORKFLOW_ID:0:7}"
             aws cloudformation delete-stack \
-              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+              --stack-name "nlp-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
 jobs:
   build-backend:
     docker:
@@ -51,7 +51,7 @@ jobs:
             --stack-name nlp-backend-${CIRCLE_WORKFLOW_ID:0:7} \
             --tags project=nlp
       - run:
-          name: check frontend infracture
+          name: check model infracture
           command: |
             aws cloudformation deploy \
             --template-file .circleci/files/frontend.yml \
@@ -107,11 +107,8 @@ jobs:
       - run:
           name: Deploying model file
           command: |
-            cd frontend
-            npm install
-            npm run build
             cd model
-            aws s3 sync . "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --delete
+            aws s3 sync . "s3://nlp-${CIRCLE_WORKFLOW_ID:0:7}" --delete
       - destroy-environment
   deploy-backend:
     docker:
@@ -182,18 +179,7 @@ jobs:
             else
                 return 1
             fi
-      - run:
-          name: Frontend smoke ciggarete test.
-          command: |
-            # your code here
-            URL="https://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3.us-east-1.amazonaws.com/index.html#/employees"
-            echo ${URL}
-            if curl -s ${URL} | grep "Welcome"
-            then
-              return 0
-            else
-              return 1
-            fi
+
       - destroy-environment
   cloudfront-update:
     docker:
@@ -226,10 +212,10 @@ jobs:
             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
             then
               echo "Removing old Stacks#....${OldWorkflowID}"
-              echo "s3://udapeople-${OldWorkflowID}"
-              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
-              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
-              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+              echo "s3://nlp-${OldWorkflowID}"
+              aws s3 rm "s3://nlp-${OldWorkflowID}" --recursive
+              aws cloudformation delete-stack --stack-name "nlp-backend-${OldWorkflowID}"
+              aws cloudformation delete-stack --stack-name "nlp-frontend-${OldWorkflowID}"
             else
               echo "There is no old stacks needs to be cleaned up"
             fi
@@ -248,7 +234,7 @@ workflows:
       - deploy-backend:
           requires: [deploy-model]
       - smoke-test:
-          requires: [deploy-backend, deploy-frontend]
+          requires: [deploy-backend, deploy-model]
       - cloudfront-update:
           requires: [smoke-test]
       - cleanup:
